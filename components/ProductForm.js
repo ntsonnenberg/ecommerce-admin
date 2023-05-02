@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
+import Sortable from "sortablejs";
 
 export default function ProductForm({
 	_id,
@@ -63,7 +64,7 @@ export default function ProductForm({
 	};
 
 	const updateImagesOrder = (images) => {
-		console.log(images);
+		setImages(images);
 	};
 
 	return (
