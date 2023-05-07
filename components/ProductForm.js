@@ -11,10 +11,14 @@ export default function ProductForm({
 	price: exisitngPrice,
 	images: existingImages,
 	category: assignedCategory,
+	properties: assignedProperties,
 }) {
 	const [title, setTitle] = useState(existingTitle || "");
 	const [description, setDescription] = useState(existingDescription || "");
 	const [category, setCategory] = useState(assignedCategory || "");
+	const [productProperties, setProductProperties] = useState(
+		assignedProperties || {}
+	);
 	const [price, setPrice] = useState(exisitngPrice || "");
 	const [images, setImages] = useState(existingImages || []);
 	const [goToProducts, setGoToProducts] = useState(false);
@@ -32,7 +36,14 @@ export default function ProductForm({
 	const saveProduct = async (event) => {
 		event.preventDefault();
 
-		const data = { title, description, price, images, category };
+		const data = {
+			title,
+			description,
+			price,
+			images,
+			category,
+			properties: productProperties,
+		};
 
 		if (_id) {
 			//update
@@ -75,11 +86,29 @@ export default function ProductForm({
 		setImages(images);
 	};
 
-	const properties = [];
-	if (categories.length > 0 && category) {
-		const selectedCatInfo = categories.find(({ _id }) => _id === category);
+	const setProductProp = (propName, value) => {
+		setProductProperties((prev) => {
+			const newProductProps = { ...prev };
+			newProductProps[propName] = value;
 
-		console.log({ selectedCatInfo });
+			return newProductProps;
+		});
+	};
+
+	const propertiesToFill = [];
+	if (categories.length > 0 && category) {
+		let catInfo = categories.find(({ _id }) => _id === category);
+
+		propertiesToFill.push(...catInfo.properties);
+
+		while (catInfo?.parent?._id) {
+			const parentCat = categories.find(
+				({ _id }) => _id === catInfo?.parent?._id
+			);
+
+			propertiesToFill.push(...parentCat.properties);
+			catInfo = parentCat;
+		}
 	}
 
 	return (
@@ -102,7 +131,22 @@ export default function ProductForm({
 						<option value={category._id}>{category.name}</option>
 					))}
 			</select>
-			{categories.length > 0 && <div></div>}
+			{propertiesToFill.length > 0 &&
+				propertiesToFill.map((property) => (
+					<div className="flex gap-1">
+						<div>{property.name}</div>
+						<select
+							value={productProperties[property.name]}
+							onChange={(event) =>
+								setProductProp(property.name, event.target.value)
+							}
+						>
+							{property.values.map((value) => (
+								<option value={value}>{value}</option>
+							))}
+						</select>
+					</div>
+				))}
 			<label>Photos</label>
 			<div className="mb-2 flex flex-wrap gap-1">
 				<ReactSortable
