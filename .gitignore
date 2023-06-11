@@ -36,3 +36,6 @@ next-env.d.ts
 
 # environment variables
 .env
+
+# yarn package manager
+yarn.lock
