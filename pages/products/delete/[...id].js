@@ -13,7 +13,7 @@ export default function DeleteProductPage() {
 		if (!id) {
 			return;
 		} else {
-			axios.get("/api/products?id=" + id).then((response) => {
+			axios.get(`/api/products?id=${id}`).then((response) => {
 				setProductInfo(response.data);
 			});
 		}
@@ -24,7 +24,7 @@ export default function DeleteProductPage() {
 	};
 
 	const deleteProduct = async () => {
-		await axios.delete("/api/products?id=" + id);
+		await axios.delete(`/api/products?id=${id}`);
 		goBack();
 	};
 

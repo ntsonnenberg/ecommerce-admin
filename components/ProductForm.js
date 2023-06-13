@@ -128,12 +128,14 @@ export default function ProductForm({
 				<option value="">Uncategorized</option>
 				{categories.length > 0 &&
 					categories.map((category) => (
-						<option value={category._id}>{category.name}</option>
+						<option value={category._id} key={category._id}>
+							{category.name}
+						</option>
 					))}
 			</select>
 			{propertiesToFill.length > 0 &&
 				propertiesToFill.map((property) => (
-					<div className="">
+					<div key={property._id}>
 						<label>
 							{property.name[0].toUpperCase() + property.name.substring(1)}
 						</label>
@@ -145,7 +147,9 @@ export default function ProductForm({
 								}
 							>
 								{property.values.map((value) => (
-									<option value={value}>{value}</option>
+									<option value={value} key={value}>
+										{value}
+									</option>
 								))}
 							</select>
 						</div>
